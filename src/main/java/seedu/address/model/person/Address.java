@@ -42,6 +42,14 @@ public class Address {
         return test.matches(VALIDATION_REGEX);
     }
 
+    /**
+     * Returns true if a given string is a valid phone number.
+     * For active parsing.
+     */
+    public static boolean isParsedAddress(String test) {
+        return test.matches(VALIDATION_REGEX);
+    }
+
     @Override
     public String toString() {
         return value;
