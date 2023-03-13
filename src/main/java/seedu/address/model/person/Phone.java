@@ -9,6 +9,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Phone {
 
+    public static final Phone EMPTY_PHONE = new Phone("");
 
     public static final String MESSAGE_CONSTRAINTS =
             "Phone numbers should only contain numbers, and it should be at least 3 digits long";
@@ -30,6 +31,9 @@ public class Phone {
      * Returns true if a given string is a valid phone number.
      */
     public static boolean isValidPhone(String test) {
+        if (test.isEmpty()) {
+            return true;
+        }
         return test.matches(VALIDATION_REGEX);
     }
 
