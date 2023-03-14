@@ -55,7 +55,11 @@ public class PersonCard extends UiPart<Region> {
         this.person = person;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
-        phone.setText(person.getPhone().value);
+        if (person.getPhone().isPresent()) {
+            phone.setText(person.getPhone().get().toString());
+        } else {
+            phone.setText("");
+        }
         if (person.getEmail().isPresent()) {
             email.setText(person.getEmail().get().toString());
         } else {

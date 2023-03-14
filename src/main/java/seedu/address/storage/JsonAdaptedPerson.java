@@ -27,7 +27,7 @@ class JsonAdaptedPerson {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Person's %s field is missing!";
 
     private final String name;
-    private final String phone;
+    private JsonAdaptedPhone phone = new JsonAdaptedPhone();
     private JsonAdaptedEmail email = new JsonAdaptedEmail();
     private JsonAdaptedAddress address = new JsonAdaptedAddress();
     private final List<JsonAdaptedTag> tagged = new ArrayList<>();
@@ -37,13 +37,17 @@ class JsonAdaptedPerson {
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
      */
     @JsonCreator
-    public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
+    public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") JsonAdaptedPhone phone,
             @JsonProperty("email") JsonAdaptedEmail email, @JsonProperty("address") JsonAdaptedAddress address,
             @JsonProperty("tagged") List<JsonAdaptedTag> tagged,
             @JsonProperty("birthday") JsonAdaptedBirthday birthday) {
         this.name = name;
-        this.phone = phone;
-        this.email = email;
+        if (phone != null) {
+            this.phone = phone;
+        }
+        if (email != null) {
+            this.email = email;
+        }
         if (address != null) {
             this.address = address;
         }
@@ -60,10 +64,13 @@ class JsonAdaptedPerson {
      */
     public JsonAdaptedPerson(Person source) {
         name = source.getName().fullName;
-        phone = source.getPhone().value;
         tagged.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+
+        if (source.getPhone().isPresent()) {
+            phone = new JsonAdaptedPhone(source.getPhone().get());
+        }
 
         if (source.getEmail().isPresent()) {
             email = new JsonAdaptedEmail(source.getEmail().get());
@@ -99,13 +106,15 @@ class JsonAdaptedPerson {
         }
         final Name modelName = new Name(name);
 
-        if (!Phone.isValidPhone(phone)) {
-            throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
-        }
-        final Phone modelPhone = new Phone(phone);
-
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        Person p = new Person(modelName, modelPhone, modelTags);
+        Person p = new Person(modelName, modelTags);
+
+        if (phone != null) {
+            Optional<Phone> modelPhone = phone.toModelType();
+            if (modelPhone.isPresent()) {
+                p.setPhone(modelPhone.get());
+            }
+        }
 
         if (email != null) {
             Optional<Email> modelEmail = email.toModelType();

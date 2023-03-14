@@ -19,7 +19,7 @@ public class Person {
 
     // Identity fields
     private final Name name;
-    private final Phone phone;
+    private Optional<Phone> phone;
     private Optional<Email> email;
 
     // Data fields
@@ -30,14 +30,18 @@ public class Person {
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Set<Tag> tags) {
-        requireAllNonNull(name, phone, tags);
+    public Person(Name name, Set<Tag> tags) {
+        requireAllNonNull(name, tags);
         this.name = name;
-        this.phone = phone;
+        this.phone = Optional.empty();
         this.email = Optional.empty();
         this.address = Optional.empty();
         this.tags.addAll(tags);
         this.birthday = Optional.empty();
+    }
+
+    public void setPhone(Phone phone) {
+        this.phone = Optional.ofNullable(phone);
     }
 
     public void setEmail(Email email) {
@@ -56,7 +60,7 @@ public class Person {
         return name;
     }
 
-    public Phone getPhone() {
+    public Optional<Phone> getPhone() {
         return phone;
     }
 
