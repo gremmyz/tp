@@ -28,7 +28,7 @@ class JsonAdaptedPerson {
 
     private final String name;
     private final String phone;
-    private final String email;
+    private JsonAdaptedEmail email = new JsonAdaptedEmail();
     private JsonAdaptedAddress address = new JsonAdaptedAddress();
     private final List<JsonAdaptedTag> tagged = new ArrayList<>();
     private JsonAdaptedBirthday birthday = new JsonAdaptedBirthday();
@@ -38,7 +38,7 @@ class JsonAdaptedPerson {
      */
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
-            @JsonProperty("email") String email, @JsonProperty("address") JsonAdaptedAddress address,
+            @JsonProperty("email") JsonAdaptedEmail email, @JsonProperty("address") JsonAdaptedAddress address,
             @JsonProperty("tagged") List<JsonAdaptedTag> tagged,
             @JsonProperty("birthday") JsonAdaptedBirthday birthday) {
         this.name = name;
@@ -61,10 +61,13 @@ class JsonAdaptedPerson {
     public JsonAdaptedPerson(Person source) {
         name = source.getName().fullName;
         phone = source.getPhone().value;
-        email = source.getEmail().value;
         tagged.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+
+        if (source.getEmail().isPresent()) {
+            email = new JsonAdaptedEmail(source.getEmail().get());
+        }
 
         if (source.getAddress().isPresent()) {
             address = new JsonAdaptedAddress(source.getAddress().get());
@@ -101,17 +104,18 @@ class JsonAdaptedPerson {
         }
         final Phone modelPhone = new Phone(phone);
 
-        if (!Email.isValidEmail(email)) {
-            throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
-        }
-        final Email modelEmail = new Email(email);
-
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        Person p = new Person(modelName, modelPhone, modelEmail, modelTags);
+        Person p = new Person(modelName, modelPhone, modelTags);
+
+        if (email != null) {
+            Optional<Email> modelEmail = email.toModelType();
+            if (modelEmail.isPresent()) {
+                p.setEmail(modelEmail.get());
+            }
+        }
 
         if (address != null) {
             Optional<Address> modelAddress = address.toModelType();
-
             if (modelAddress.isPresent()) {
                 p.setAddress(modelAddress.get());
             }
@@ -119,7 +123,6 @@ class JsonAdaptedPerson {
 
         if (birthday != null) {
             Optional<Birthday> modelBirthday = birthday.toModelType();
-
             if (modelBirthday.isPresent()) {
                 p.setBirthday(modelBirthday.get());
             }

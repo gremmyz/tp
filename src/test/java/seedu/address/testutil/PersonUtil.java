@@ -28,12 +28,11 @@ public class PersonUtil {
     /**
      * Returns the part of command string for the given {@code person}'s details.
      */
-    //TODO Append for address, birthday
+    //TODO Append for address, birthday, email
     public static String getPersonDetails(Person person) {
         StringBuilder sb = new StringBuilder();
         sb.append(PREFIX_NAME + person.getName().fullName + " ");
         sb.append(PREFIX_PHONE + person.getPhone().value + " ");
-        sb.append(PREFIX_EMAIL + person.getEmail().value + " ");
         person.getTags().stream().forEach(
             s -> sb.append(PREFIX_TAG + s.tagName + " ")
         );

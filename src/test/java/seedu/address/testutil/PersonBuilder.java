@@ -34,7 +34,6 @@ public class PersonBuilder {
     public PersonBuilder() {
         name = new Name(DEFAULT_NAME);
         phone = new Phone(DEFAULT_PHONE);
-        email = new Email(DEFAULT_EMAIL);
         tags = new HashSet<>();
     }
 
@@ -44,7 +43,6 @@ public class PersonBuilder {
     public PersonBuilder(Person personToCopy) {
         name = personToCopy.getName();
         phone = personToCopy.getPhone();
-        email = personToCopy.getEmail();
         tags = new HashSet<>(personToCopy.getTags());
     }
 
@@ -105,7 +103,11 @@ public class PersonBuilder {
      * @return a person with the given details.
      */
     public Person build() {
-        Person p = new Person(name, phone, email, tags);
+        Person p = new Person(name, phone, tags);
+
+        if (email != null) {
+            p.setEmail(email);
+        }
 
         if (address != null) {
             p.setAddress(address);

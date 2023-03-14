@@ -27,7 +27,7 @@ public class JsonAdaptedPersonTest {
 
     private static final String VALID_NAME = BENSON.getName().toString();
     private static final String VALID_PHONE = BENSON.getPhone().toString();
-    private static final String VALID_EMAIL = BENSON.getEmail().toString();
+    private static final JsonAdaptedEmail VALID_EMAIL = new JsonAdaptedEmail(BENSON.getEmail().get());
     private static final JsonAdaptedAddress VALID_ADDRESS = new JsonAdaptedAddress(BENSON.getAddress().get());
     private static final JsonAdaptedBirthday VALID_BIRTHDAY = new JsonAdaptedBirthday(BENSON.getBirthday().get());
     private static final List<JsonAdaptedTag> VALID_TAGS = BENSON.getTags().stream()
@@ -66,7 +66,8 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_invalidEmail_throwsIllegalValueException() {
-        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, INVALID_EMAIL, VALID_ADDRESS,
+        JsonAdaptedEmail invalidEmail = new JsonAdaptedEmail(INVALID_EMAIL);
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, invalidEmail, VALID_ADDRESS,
                 VALID_TAGS, VALID_BIRTHDAY);
         String expectedMessage = Email.MESSAGE_CONSTRAINTS;
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
