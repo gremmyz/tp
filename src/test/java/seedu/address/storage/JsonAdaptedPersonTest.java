@@ -20,7 +20,7 @@ import seedu.address.model.person.Phone;
 public class JsonAdaptedPersonTest {
     private static final String INVALID_NAME = "R@chel";
     private static final String INVALID_PHONE = "+651234";
-    private static final String INVALID_ADDRESS = " ";
+    private static final String INVALID_ADDRESS = "   ";
     private static final String INVALID_EMAIL = "example.com";
     private static final String INVALID_TAG = "#friend";
     private static final String INVALID_BIRTHDAY = "01/01-2000";
@@ -62,7 +62,7 @@ public class JsonAdaptedPersonTest {
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, invalidPhone, VALID_EMAIL, VALID_ADDRESS,
                 VALID_TAGS, VALID_BIRTHDAY);
         String expectedMessage = Phone.MESSAGE_CONSTRAINTS;
-        assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
+        assertThrows(IllegalArgumentException.class, expectedMessage, person::toModelType);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class JsonAdaptedPersonTest {
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, invalidEmail, VALID_ADDRESS,
                 VALID_TAGS, VALID_BIRTHDAY);
         String expectedMessage = Email.MESSAGE_CONSTRAINTS;
-        assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
+        assertThrows(IllegalArgumentException.class, expectedMessage, person::toModelType);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class JsonAdaptedPersonTest {
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, invalidAddress,
                 VALID_TAGS, VALID_BIRTHDAY);
         String expectedMessage = Address.MESSAGE_CONSTRAINTS;
-        assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
+        assertThrows(IllegalArgumentException.class, expectedMessage, person::toModelType);
     }
 
     @Test
