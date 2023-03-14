@@ -42,19 +42,19 @@ public class JsonAdaptedPersonTest {
     }
 
     @Test
-    public void toModelType_validPersonDetails_WithMissingPhone_returnsPerson() throws Exception {
+    public void toModelType_validPersonDetailsWithMissingPhone_returnsPerson() throws Exception {
         JsonAdaptedPerson person = new JsonAdaptedPerson(JASON);
         assertEquals(JASON, person.toModelType());
     }
 
     @Test
-    public void toModelType_validPersonDetails_WithMissingEmail_returnsPerson() throws Exception {
+    public void toModelType_validPersonDetailsWithMissingEmail_returnsPerson() throws Exception {
         JsonAdaptedPerson person = new JsonAdaptedPerson(KASEY);
         assertEquals(KASEY, person.toModelType());
     }
 
     @Test
-    public void toModelType_validPersonDetails_WithMissingAddress_returnsPerson() throws Exception {
+    public void toModelType_validPersonDetailsWithMissingAddress_returnsPerson() throws Exception {
         JsonAdaptedPerson person = new JsonAdaptedPerson(LARRY);
         assertEquals(LARRY, person.toModelType());
     }
