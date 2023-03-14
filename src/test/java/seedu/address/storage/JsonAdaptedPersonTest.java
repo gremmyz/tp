@@ -26,7 +26,7 @@ public class JsonAdaptedPersonTest {
     private static final String INVALID_BIRTHDAY = "01/01-2000";
 
     private static final String VALID_NAME = BENSON.getName().toString();
-    private static final String VALID_PHONE = BENSON.getPhone().toString();
+    private static final JsonAdaptedPhone VALID_PHONE = new JsonAdaptedPhone(BENSON.getPhone().get());
     private static final JsonAdaptedEmail VALID_EMAIL = new JsonAdaptedEmail(BENSON.getEmail().get());
     private static final JsonAdaptedAddress VALID_ADDRESS = new JsonAdaptedAddress(BENSON.getAddress().get());
     private static final JsonAdaptedBirthday VALID_BIRTHDAY = new JsonAdaptedBirthday(BENSON.getBirthday().get());
@@ -58,7 +58,8 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_invalidPhone_throwsIllegalValueException() {
-        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, INVALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+        JsonAdaptedPhone invalidPhone = new JsonAdaptedPhone(INVALID_PHONE);
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, invalidPhone, VALID_EMAIL, VALID_ADDRESS,
                 VALID_TAGS, VALID_BIRTHDAY);
         String expectedMessage = Phone.MESSAGE_CONSTRAINTS;
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
