@@ -64,7 +64,6 @@ public class SampleDataUtil {
 
         return new Person[] {
             p1, p2, p3, p4, p5, p6
-
         };
     }
 

@@ -97,7 +97,6 @@ public class JsonAdaptedPersonTest {
         JsonAdaptedBirthday invalidBirthday = new JsonAdaptedBirthday(INVALID_BIRTHDAY);
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                 VALID_TAGS, invalidBirthday);
-
         assertThrows(IllegalArgumentException.class, person::toModelType);
     }
 
