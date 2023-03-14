@@ -32,10 +32,23 @@ public class Birthday {
     }
 
     /**
+     * Constructs an {@code Birthday}.
+     * @param birthday A  birthday as LocalDate.
+     */
+    public Birthday(LocalDate birthday) {
+        requireNonNull(birthday);
+        value = birthday;
+    }
+
+    /**
      * Returns if a given string is a valid birthday.
      */
     public static boolean isValidBirthday(String test) {
         return test.matches(VALIDATION_REGEX);
+    }
+
+    public LocalDate getValue() {
+        return value;
     }
 
     @Override
