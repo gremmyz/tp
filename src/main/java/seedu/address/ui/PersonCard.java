@@ -56,12 +56,15 @@ public class PersonCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
         phone.setText(person.getPhone().value);
-        address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
+        if (person.getAddress().isPresent()) {
+            address.setText(person.getAddress().get().toString());
+        } else {
+            address.setText("");
+        }
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
-
         if (person.getBirthday().isPresent()) {
             birthday.setText(person.getBirthday().get().toString());
         } else {

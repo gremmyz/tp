@@ -7,7 +7,6 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.model.person.Address.EMPTY_ADDRESS;
 import static seedu.address.model.person.Email.EMPTY_EMAIL;
 import static seedu.address.model.person.Phone.EMPTY_PHONE;
 
@@ -51,12 +50,14 @@ public class AddCommandParser implements Parser<AddCommand> {
         Email email = argMultimap.getValue(PREFIX_EMAIL).isPresent()
                 ? ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get())
                 : EMPTY_EMAIL;
-        Address address = argMultimap.getValue(PREFIX_ADDRESS).isPresent()
-                ? ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get())
-                : EMPTY_ADDRESS;
         Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
 
-        Person person = new Person(name, phone, email, address, tagList);
+        Person person = new Person(name, phone, email, tagList);
+
+        if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
+            Address address = ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get());
+            person.setAddress(address);
+        }
 
         if (argMultimap.getValue(PREFIX_BIRTHDAY).isPresent()) {
             Birthday birthday = ParserUtil.parseBirthday(argMultimap.getValue(PREFIX_BIRTHDAY).get());

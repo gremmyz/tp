@@ -23,25 +23,29 @@ public class Person {
     private final Email email;
 
     // Data fields
-    private final Address address;
+    private Optional<Address> address;
     private final Set<Tag> tags = new HashSet<>();
     private Optional<Birthday> birthday;
 
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, address, tags);
+    public Person(Name name, Phone phone, Email email, Set<Tag> tags) {
+        requireAllNonNull(name, phone, email, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.address = address;
+        this.address = Optional.empty();
         this.tags.addAll(tags);
         this.birthday = Optional.empty();
     }
 
     public void setBirthday(Birthday birthday) {
         this.birthday = Optional.ofNullable(birthday);
+    }
+
+    public void setAddress(Address address) {
+        this.address = Optional.ofNullable(address);
     }
 
     public Name getName() {
@@ -56,7 +60,7 @@ public class Person {
         return email;
     }
 
-    public Address getAddress() {
+    public Optional<Address> getAddress() {
         return address;
     }
 

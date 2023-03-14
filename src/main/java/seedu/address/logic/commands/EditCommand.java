@@ -99,10 +99,17 @@ public class EditCommand extends Command {
         Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
-        Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
 
-        Person p = new Person(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedTags);
+        Person p = new Person(updatedName, updatedPhone, updatedEmail, updatedTags);
+
+        if (editPersonDescriptor.getAddress().isPresent()) {
+            p.setAddress(editPersonDescriptor.getAddress().get());
+        } else {
+            if (personToEdit.getAddress().isPresent()) {
+                p.setAddress(personToEdit.getAddress().get());
+            }
+        }
 
         if (editPersonDescriptor.getBirthday().isPresent()) {
             p.setBirthday(editPersonDescriptor.getBirthday().get());
@@ -111,6 +118,8 @@ public class EditCommand extends Command {
                 p.setBirthday(personToEdit.getBirthday().get());
             }
         }
+
+
 
         return p;
     }
@@ -196,11 +205,15 @@ public class EditCommand extends Command {
         }
 
         public void setAddress(Address address) {
-            this.address = address;
+            this.address = (address != null)
+                    ? address
+                    : null;
         }
 
         public Optional<Address> getAddress() {
-            return Optional.ofNullable(address);
+            return (address != null)
+                    ? Optional.ofNullable(address)
+                    : Optional.empty();
         }
 
         public void setBirthday(Birthday birthday) {

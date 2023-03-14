@@ -29,7 +29,7 @@ class JsonAdaptedPerson {
     private final String name;
     private final String phone;
     private final String email;
-    private final String address;
+    private JsonAdaptedAddress address = new JsonAdaptedAddress();
     private final List<JsonAdaptedTag> tagged = new ArrayList<>();
     private JsonAdaptedBirthday birthday = new JsonAdaptedBirthday();
 
@@ -38,13 +38,15 @@ class JsonAdaptedPerson {
      */
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
-            @JsonProperty("email") String email, @JsonProperty("address") String address,
+            @JsonProperty("email") String email, @JsonProperty("address") JsonAdaptedAddress address,
             @JsonProperty("tagged") List<JsonAdaptedTag> tagged,
             @JsonProperty("birthday") JsonAdaptedBirthday birthday) {
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.address = address;
+        if (address != null) {
+            this.address = address;
+        }
         if (tagged != null) {
             this.tagged.addAll(tagged);
         }
@@ -60,10 +62,13 @@ class JsonAdaptedPerson {
         name = source.getName().fullName;
         phone = source.getPhone().value;
         email = source.getEmail().value;
-        address = source.getAddress().value;
         tagged.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+
+        if (source.getAddress().isPresent()) {
+            address = new JsonAdaptedAddress(source.getAddress().get());
+        }
 
         if (source.getBirthday().isPresent()) {
             birthday = new JsonAdaptedBirthday(source.getBirthday().get());
@@ -101,13 +106,16 @@ class JsonAdaptedPerson {
         }
         final Email modelEmail = new Email(email);
 
-        if (!Address.isValidAddress(address)) {
-            throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
-        }
-        final Address modelAddress = new Address(address);
-
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        Person p = new Person(modelName, modelPhone, modelEmail, modelAddress, modelTags);
+        Person p = new Person(modelName, modelPhone, modelEmail, modelTags);
+
+        if (address != null) {
+            Optional<Address> modelAddress = address.toModelType();
+
+            if (modelAddress.isPresent()) {
+                p.setAddress(modelAddress.get());
+            }
+        }
 
         if (birthday != null) {
             Optional<Birthday> modelBirthday = birthday.toModelType();
