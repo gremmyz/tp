@@ -96,11 +96,20 @@ public class PersonCard extends UiPart<Region> {
         }
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
-                .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+                .forEach(tag -> {
+                    Label tagLabel = new Label(tag.tagName);
+                    tagLabel.getStyleClass().add("label");
+                    tagLabel.getStyleClass().add("general");
+                    tags.getChildren().add(tagLabel);
+                });
         person.getModules().stream()
                 .sorted(Comparator.comparing(module -> module.tagName))
-                .forEach(module -> tags.getChildren().add(new Label(module.tagName)));
-
+                .forEach(module -> {
+                    Label moduleLabel = new Label(module.tagName);
+                    moduleLabel.getStyleClass().add("label");
+                    moduleLabel.getStyleClass().add("module");
+                    tags.getChildren().add(moduleLabel);
+                });
         if (person.getBirthday().isPresent()) {
             birthday.setText(person.getBirthday().get().toString());
         } else {
