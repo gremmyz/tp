@@ -94,13 +94,21 @@ public class PersonCard extends UiPart<Region> {
             socialMediaContainer.setVisible(false);
             socialMediaContainer.managedProperty().bind(socialMediaContainer.visibleProperty());
         }
-        person.getTags().stream()
-                .sorted(Comparator.comparing(tag -> tag.tagName))
-                .forEach(tag -> {
-                    Label tagLabel = new Label(tag.tagName);
-                    tagLabel.getStyleClass().add("label");
-                    tagLabel.getStyleClass().add("general");
-                    tags.getChildren().add(tagLabel);
+        if (person.getBirthday().isPresent()) {
+            birthday.setText(person.getBirthday().get().toString());
+        } else {
+            birthday.setText("");
+            birthdayContainer.setVisible(false);
+            birthdayContainer.managedProperty().bind(birthdayContainer.visibleProperty());
+        }
+
+        person.getRemarks().stream()
+                .sorted(Comparator.comparing(remark -> remark.tagName))
+                .forEach(remark -> {
+                    Label remarkLabel = new Label(remark.tagName);
+                    remarkLabel.getStyleClass().add("label");
+                    remarkLabel.getStyleClass().add("remark");
+                    tags.getChildren().add(remarkLabel);
                 });
         person.getModules().stream()
                 .sorted(Comparator.comparing(module -> module.tagName))
@@ -110,13 +118,22 @@ public class PersonCard extends UiPart<Region> {
                     moduleLabel.getStyleClass().add("module");
                     tags.getChildren().add(moduleLabel);
                 });
-        if (person.getBirthday().isPresent()) {
-            birthday.setText(person.getBirthday().get().toString());
-        } else {
-            birthday.setText("");
-            birthdayContainer.setVisible(false);
-            birthdayContainer.managedProperty().bind(birthdayContainer.visibleProperty());
-        }
+        person.getCcas().stream()
+                .sorted(Comparator.comparing(cca -> cca.tagName))
+                .forEach(cca -> {
+                    Label ccaLabel = new Label(cca.tagName);
+                    ccaLabel.getStyleClass().add("label");
+                    ccaLabel.getStyleClass().add("cca");
+                    tags.getChildren().add(ccaLabel);
+                });
+        person.getCcaPositions().stream()
+                .sorted(Comparator.comparing(ccaPosition -> ccaPosition.tagName))
+                .forEach(ccaPosition -> {
+                    Label ccaPositionLabel = new Label(ccaPosition.tagName);
+                    ccaPositionLabel.getStyleClass().add("label");
+                    ccaPositionLabel.getStyleClass().add("ccaPosition");
+                    tags.getChildren().add(ccaPositionLabel);
+                });
     }
 
     @Override
